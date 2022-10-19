@@ -27,9 +27,6 @@ int main()
     //cout<<p.getEdad()<<endl;
     p.run();
     
-
-    //cin>>n;
-    
     //Sleep(3000);
     //cout<<p.getEnergia()<<endl;
 
