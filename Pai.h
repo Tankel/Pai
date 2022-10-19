@@ -211,6 +211,8 @@ void Pai::dormir()//HILO
 
 void Pai::comer()//HILO
 {
+    //jei
+    //ssssssssssssss
     estaDurmiendo = true;
     for(int i=1; i<14; i++)
     {
