@@ -24,7 +24,6 @@ int main()
     } while (r!='s' && r!='S' && r!='n' && r!='N');
 
     //Sleep(3000);
-    //cout<<p.getEdad()<<endl;
     p.run();
     
     //Sleep(3000);
