@@ -27,7 +27,6 @@ int main()
     //Sleep(3000);
     p.run();
     
-    //Sleep(3000);
     //cout<<p.getEnergia()<<endl;
 
 }
