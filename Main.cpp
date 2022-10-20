@@ -14,7 +14,8 @@ int main()
     {
       cout<<"Quieres nombrar a tu nuevo amigo? s/n\n";
       std::cin>>r;
-      p = Pai();
+      //p = Pai();
+      p = Pai("Pai", 100, 3);
       if(r=='S' || r=='s')
       {
         cout<<"Ingrese el mote\n";
