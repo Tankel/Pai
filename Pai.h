@@ -189,26 +189,13 @@ void Pai::dormir()//HILO
     while(getEnergia()<100)
     {
         system("cls");
-        write_line("PaiSleep1.txt",13," ENERGIA: "+to_string(getEnergia()), "temp1.txt"); //\r
-        printASCII("PaiSleep1.txt");
-        Sleep(220);
-        system("cls");
-        if(getEnergia()<100)setEnergia(getEnergia()+1);
-        write_line("PaiSleep2.txt",13," ENERGIA: "+to_string(getEnergia()), "temp1_.txt"); //\r
-        printASCII("PaiSleep2.txt");
-        Sleep(220);
-        system("cls");
-        if(getEnergia()<100)setEnergia(getEnergia()+1);
-        write_line("PaiSleep3.txt",13," ENERGIA: "+to_string(getEnergia()), "temp1__.txt"); //\r
-        printASCII("PaiSleep3.txt");
-        Sleep(220);
-        system("cls");
-        if(getEnergia()<100)setEnergia(getEnergia()+1);
-        //lock.unlock();
-        //Sleep(100);
-        del_line("PaiSleep1.txt",13, "temp1.txt");
-        del_line("PaiSleep2.txt",13, "temp1_.txt");
-        del_line("PaiSleep3.txt",13, "temp1__.txt");   
+        for(int i=1; i<4; i++)
+        {
+        write_line("PaiSleep"+to_string(i)+".txt",13," ENERGIA: "+to_string(getEnergia()), "temp1.txt"); //\r
+        printSprite("PaiSleep"+to_string(i)+".txt",260);
+        if(getEnergia()<100)
+            setEnergia(getEnergia()+1);
+        del_line("PaiSleep"+to_string(i)+"txt",13, "temp1.txt");
     }
     system("cls");
     estaDurmiendo = false;
@@ -222,28 +209,20 @@ void Pai::comer()//HILO
     estaDurmiendo = true;
     for(int i=1; i<14; i++)
     {
-        system("cls");
-        printASCII("PaiEat"+to_string(i)+".txt");
-        Sleep(100);
+        printSprite("PaiEat"+to_string(i)+".txt",100);
     }
     for(int i=0; i<4; i++)
     {
-        system("cls");
-        printASCII("PaiEat15.txt");
-        Sleep(150);
-        system("cls");
-        printASCII("PaiEat16.txt");
-        Sleep(150);
+        printSprite("PaiEat15.txt",150);
+        printSprite("PaiEat16.txt",150);
     }
-    system("cls");
-    printASCII("PaiEat17.txt");
-    Sleep(100);
-    system("cls");
-    printASCII("PaiEat18.txt");
-    Sleep(100);
+    printSprite("PaiEat17.txt",100);
+    printSprite("PaiEat18.txt",100);
 
     setHambre(getHambre()+30);
-    if(getHambre()>99)setHambre(100);
+    if(getHambre()>99
+        setHambre(100);
+
     system("cls");
     estaDurmiendo = false;
     run();
@@ -284,7 +263,12 @@ void Pai::input()//HILO
 }
 void Pai::jugar()
 {
-    
+    while(true)
+    {
+        printASCII("PaiSleep1.txt");
+        Sleep(220);
+        system("cls");
+    }
 }
 void Pai::run()
 {  
