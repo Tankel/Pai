@@ -6,30 +6,32 @@
 #include <pthread.h>
 #include <thread>
 #include "archivos.h"
-//#include <mutex>
-//#if defined(_GLIBCXX_HAS_GTHREADS) && defined(_GLIBCXX_USE_C99_STDINT_TR1)
+#include <time.h> 
+#include <cstdio>
 
 using namespace std;
 
 //std:: mutex mu;
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-bool estaDurmiendo=false;
+bool estaDurmiendo = false;
+bool estaJugando=false;
 bool op1;
 bool op2;
 bool op3;
+int myMove; //piedra papel o tijer
 
 class Pai
 {
     private:
-        string nombre; 
+        std::string nombre; 
         int edad;
         int hambre; 
         int energia; 
     public:
         Pai():nombre("Pai"),edad(0),hambre(100),energia(100){};
-        Pai(string _name, int _energia, int _hambre): nombre(_name),edad(0),hambre(_hambre),energia(_energia){};        
-        Pai(string _name): nombre(_name),edad(0),hambre(100),energia(100){};
-        string getNombre(){return nombre;};
+        Pai(std::string _name, int _energia, int _hambre): nombre(_name),edad(0),hambre(_hambre),energia(_energia){};        
+        Pai(std::string _name): nombre(_name),edad(0),hambre(100),energia(100){};
+        std::string getNombre(){return nombre;};
         int getEdad() //en segundos
         {
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); 
@@ -50,6 +52,7 @@ class Pai
         void threadHambre();
         void threadEdad();
         void input();
+        void input2();
         std::chrono::steady_clock::time_point start = chrono::steady_clock::now();
         pthread_t thread1;
         pthread_t thread2;
@@ -59,6 +62,7 @@ class Pai
         pthread_t thread6;
         pthread_t thread7;
         pthread_t thread8;
+        pthread_t thread9;
         static void* ex_threadEnergia(void * This)
         {
             Pai* cptr = (Pai*)This;
@@ -98,6 +102,11 @@ class Pai
         {
             Pai* cptr = (Pai*)This;
             cptr -> jugar();
+        };
+        static void* ex_threadInput2(void * This)
+        {
+            Pai* cptr = (Pai*)This;
+            cptr -> input2();
         };
 };
 void Pai::threadEnergia()//HILO
@@ -191,11 +200,14 @@ void Pai::dormir()//HILO
         system("cls");
         for(int i=1; i<4; i++)
         {
-        write_line("PaiSleep"+to_string(i)+".txt",13," ENERGIA: "+to_string(getEnergia()), "temp1.txt"); //\r
-        printSprite("PaiSleep"+to_string(i)+".txt",260);
+        std::string str = "PaiSleep"+to_string(i)+".txt";
+        const char * nameFile = str.c_str();
+        write_line(nameFile,13," ENERGIA: "+to_string(getEnergia()), "temp1.txt"); //\r
+        printSprite(nameFile,260);
         if(getEnergia()<100)
             setEnergia(getEnergia()+1);
-        del_line("PaiSleep"+to_string(i)+"txt",13, "temp1.txt");
+        del_line(nameFile,13, "temp1.txt");
+        }
     }
     system("cls");
     estaDurmiendo = false;
@@ -220,7 +232,7 @@ void Pai::comer()//HILO
     printSprite("PaiEat18.txt",100);
 
     setHambre(getHambre()+30);
-    if(getHambre()>99
+    if(getHambre()>99)
         setHambre(100);
 
     system("cls");
@@ -235,7 +247,8 @@ void Pai::input()//HILO
     while(true)
     {
         char n;
-        cin>>n;
+        std::cin>>n;
+        if(estaJugando) myMove = int(n-'0');
         switch (n)
         {
         case '1':
@@ -263,13 +276,56 @@ void Pai::input()//HILO
 }
 void Pai::jugar()
 {
-    while(true)
+    estaJugando = true;
+    srand (time(NULL));
+    int paiMove = rand()%3 + 1;
+    //cout<<paiMove<<endl;
+    myMove =-1;
+    int g;
+    Sleep(100);
+    while(myMove==-1)
     {
-        printASCII("PaiSleep1.txt");
-        Sleep(220);
-        system("cls");
+        pthread_mutex_lock( &mutex1 );
+        printSprite("PaiPPJ1.txt",400);
+        pthread_mutex_unlock( &mutex1 );
+        pthread_mutex_lock( &mutex1 );
+        printSprite("PaiPPJ2.txt",400);
+        pthread_mutex_unlock( &mutex1 );
+        pthread_mutex_lock( &mutex1 );
+        printSprite("PaiPPJ3.txt",400);
+        pthread_mutex_unlock( &mutex1 );
     }
+    std::string str2 = "PaiPPJ"+to_string(paiMove)+".txt";
+    const char * nameFile2 = str2.c_str();
+    printSprite(str2,3000);
+
+    if(myMove==paiMove)
+        g=0;
+    else if((myMove==1&&paiMove==3)||(myMove==2&&paiMove==1)||(myMove==3&&paiMove==2))
+        g=1;
+    else if((myMove==3&&paiMove==1)||(myMove==1&&paiMove==2)||(myMove==2&&paiMove==3))
+        g=2;
+
+    if(g==0)
+    {
+        write_line(nameFile2, 2, "\t\t   EMPATE", "tempemp.txt"); 
+    }
+    else if(g==1)
+    {
+        write_line(nameFile2, 2, "\t\t    HAS GANADO", "tempwtie.txt"); 
+    }
+    else if(g==2)
+    {
+        write_line(nameFile2, 2, "\t\t   HAS PERDIDO", "tempperd.txt"); 
+    }
+    printSprite(str2,4000);
+    system("cls");
+    del_line(nameFile2,2, "temp____.txt");
+    estaJugando = false;
+    estaDurmiendo = false;
+    run();
 }
+
 void Pai::run()
 {  
     del_line("PaiN.txt",2, "temp4.txt");
@@ -288,55 +344,3 @@ void Pai::run()
     pthread_join(thread4, NULL);
     pthread_join(thread6, NULL);
 }
-
-class Comida
-{
-    private: 
-        string sprite;
-        double m_salud;
-        double m_energia;
-    public:
-        Comida(){};
-        void setm_salud(double m)
-        {
-            m_salud = m;
-        }
-        void setm_energia(double m)
-        {
-            m_energia = m;
-        }
-};
-
-class Fruta: public Comida
-{
-    public:
-        Fruta();
-        void setSprite();
-};
-Fruta::Fruta()
-{
-    setm_energia(40);
-    setm_salud(30);
-};
-class Pizza: public Comida
-{
-    public:
-        Pizza();
-        void setSprite();
-};
-Pizza::Pizza()
-{
-    setm_energia(60);
-    setm_salud(10);
-};
-class Taco: public Comida
-{
-    public:
-        Taco();
-        void setSprite();
-};
-Taco::Taco()
-{
-    setm_energia(20);
-    setm_salud(20);
-};

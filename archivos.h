@@ -4,14 +4,14 @@
 
 using namespace std;
 
-void write(string nombre, string texto)
+void write(std::string nombre, std::string texto)
 {
-    ofstream archivo;
+    std::ofstream archivo;
 
     archivo.open(nombre, ios::app);
     if(archivo.fail())
     {
-        cout<<"The file couldn't be open"<<endl;
+        cout<<"The file couldn't be open"<<std::endl;
     }
     fflush(stdin);
     archivo<<texto;
@@ -20,12 +20,12 @@ void write(string nombre, string texto)
 }
 void del_line(const char *file_name, int n, const char *file_nametemp)   
 {    
-    ifstream fin(file_name);    
-    ofstream wout;                
+    std::ifstream fin(file_name);    
+    std::ofstream wout;                
     wout.open(file_nametemp, ios::out);
     char ch; 
     int line = 0;    
-    string sline = "";
+    std::string sline = "";
     if(fin.is_open())
     {
         /*
@@ -38,7 +38,7 @@ void del_line(const char *file_name, int n, const char *file_nametemp)
             if(line != n) wout<<sline;
             else 
             {
-                wout<<s<<endl;
+                wout<<s<<std::endl;
                 line++;
             }
         }*/
@@ -49,8 +49,8 @@ void del_line(const char *file_name, int n, const char *file_nametemp)
             line++;
             while (sline.length()==0 ) 
                 getline(fin,sline);   
-            if(line!=n)wout<<sline<<endl;
-            else wout<<"."<<endl;
+            if(line!=n)wout<<sline<<std::endl;
+            else wout<<"."<<std::endl;
            }
         }
     }
@@ -59,10 +59,10 @@ void del_line(const char *file_name, int n, const char *file_nametemp)
     remove(file_name);        
     rename(file_nametemp, file_name);  
 } 
-void write_line(const char *file_name, int n, string s, const char *file_nametemp)   
+void write_line(const char *file_name, int n, std::string s, const char *file_nametemp)   
 {    
-  ifstream fin(file_name);    
-  ofstream fout;                
+  std::ifstream fin(file_name);    
+  std::ofstream fout;                
   fout.open(file_nametemp, ios::out); 
   
   char ch; 
@@ -75,7 +75,7 @@ void write_line(const char *file_name, int n, string s, const char *file_nametem
     if(line != n) fout<<ch;
     else 
     {
-        fout<<s<<endl;
+        fout<<s<<std::endl;
         line++;
     }
   } 
@@ -85,27 +85,27 @@ void write_line(const char *file_name, int n, string s, const char *file_nametem
   rename(file_nametemp, file_name);  
 } 
 
-void printASCII(string nombre)
+void printASCII(std::string nombre)
 {
-    string line = "";
-    ifstream archivo; 
+    std::string line = "";
+    std::ifstream archivo; 
     archivo.open(nombre);
-    if(archivo.fail()) cout<<"El archivo no se puede abrir"<<endl;
+    if(archivo.fail()) cout<<"El archivo no se puede abrir"<<std::endl;
     if(archivo.is_open())
     {
         while(!archivo.eof())
         {
             getline(archivo,line);
-            cout<<line<<endl;
+            std::cout<<line<<std::endl;
         }
     }
     else
     {
-        cout<<"El archivo no se puede abrir"<<endl;
+        cout<<"El archivo no se puede abrir"<<std::endl;
     }
     archivo.close();
 };
-void printSprite(string archivo, double tiempo)
+void printSprite(std::string archivo, double tiempo)
 {
     system("cls");
     printASCII(archivo);
