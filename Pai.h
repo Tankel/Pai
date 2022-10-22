@@ -58,6 +58,7 @@ class Pai
         pthread_t thread5;
         pthread_t thread6;
         pthread_t thread7;
+        pthread_t thread8;
         static void* ex_threadEnergia(void * This)
         {
             Pai* cptr = (Pai*)This;
@@ -92,6 +93,11 @@ class Pai
         {
             Pai* cptr = (Pai*)This;
             cptr -> input();
+        };
+        static void* ex_threadJugar(void * This)
+        {
+            Pai* cptr = (Pai*)This;
+            cptr -> jugar();
         };
 };
 void Pai::threadEnergia()//HILO
@@ -164,16 +170,16 @@ void Pai::threadReposo()//HILO
                 pthread_create( &thread5, NULL, ex_threadDormir, this);
                 pthread_join(thread5, NULL);
             }
+            if(op3 == true)
+            {
+                pthread_create( &thread8, NULL, ex_threadJugar, this);
+                pthread_join(thread8, NULL);
+            }
         }
         pthread_mutex_lock( &mutex1 );
         system("cls");
         printASCII("PaiN1.txt");
         pthread_mutex_unlock( &mutex1 );
-        if(getEnergia()<1 || op2 == true)
-        {
-            pthread_create( &thread5, NULL, ex_threadDormir, this);
-            pthread_join(thread5, NULL);
-        }
         Sleep(220);
     }
 };
@@ -275,6 +281,10 @@ void Pai::input()//HILO
             break;
         }
     }
+}
+void Pai::jugar()
+{
+    
 }
 void Pai::run()
 {  
