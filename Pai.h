@@ -8,6 +8,7 @@
 #include "archivos.h"
 #include <time.h> 
 #include <cstdio>
+#include <map>
 
 using namespace std;
 
@@ -22,25 +23,23 @@ int myMove; //piedra papel o tijer
 class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
 {
     private:
-        std::string nombre; 
-        int edad;
-        int hambre; 
-        int energia; 
+        string nombre; 
+        static std::map<string,int> data;/*int edad, int hambre, int energia*/
     public:
-        Pai():nombre("Pai"),edad(0),hambre(100),energia(100){};
-        Pai(std::string _name, int _energia, int _hambre): nombre(_name),edad(0),hambre(_hambre),energia(_energia){};        
-        Pai(std::string _name): nombre(_name),edad(0),hambre(100),energia(100){};
-        std::string getNombre(){return nombre;};
-        int getEdad() //en segundos
+        Pai():nombre("Pai"){data["edad"]=0;data["hambre"]=100;data["energia"]=100;};
+        Pai(string _name, int _energia, int _hambre):nombre(_name){data["edad"]=0;data["hambre"]=_hambre;data["energia"]=_energia;};        
+        Pai(string _name): nombre(_name){data["edad"]=0;data["hambre"]=100;data["energia"]=100;};
+        string getNombre(){return nombre;};
+        int getEdad()
         {
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); 
             return chrono::duration_cast<chrono::seconds>(end - start).count()/180; //cumple 1 anio cada 3min
         };
-        int getHambre(){return hambre;};
-        int getEnergia(){return energia;};
-        void setEnergia(int _energia){energia = _energia;};
-        void setEdad(int _edad){edad = _edad;};
-        void setHambre(int _hambre){hambre = _hambre;};
+        int getHambre(){return data["hambre"];};
+        int getEnergia(){return data["energia"];};
+        void setEnergia(int _energia){data["energia"] = _energia;};
+        void setEdad(int _edad){data["edad"] = _edad;};
+        void setHambre(int _hambre){data["hambre"] = _hambre;};
         //void alimentar(Comida);
         void comer();
         void dormir();
@@ -51,7 +50,6 @@ class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
         void threadHambre();
         void threadEdad();
         void input();
-        void input2();
         std::chrono::steady_clock::time_point start = chrono::steady_clock::now();
         pthread_t thread1;
         pthread_t thread2;
@@ -61,7 +59,6 @@ class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
         pthread_t thread6;
         pthread_t thread7;
         pthread_t thread8;
-        pthread_t thread9;
         static void* ex_threadEnergia(void * This)
         {
             Pai* cptr = (Pai*)This;
@@ -102,12 +99,8 @@ class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
             Pai* cptr = (Pai*)This;
             cptr -> jugar();
         };
-        static void* ex_threadInput2(void * This)
-        {
-            Pai* cptr = (Pai*)This;
-            cptr -> input2();
-        };
 };
+std::map<string,int> Pai::data;
 void Pai::threadEnergia()//HILO
 {
     while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
@@ -307,7 +300,7 @@ void Pai::jugar()
 
     if(g==0)
     {
-        write_line(nameFile2, 2, "\t\t   EMPATE", "tempemp.txt"); 
+        write_line(nameFile2, 2, "\t\t     EMPATE", "tempemp.txt"); 
     }
     else if(g==1)
     {
