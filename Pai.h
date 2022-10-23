@@ -26,14 +26,14 @@ class Pai //INCLUIIIIIIIIIIIIIR PTHREAD_EXIT(NUll)
         string nombre; 
         static std::map<string,int> data;/*int edad, int hambre, int energia*/
         std::chrono::steady_clock::time_point start = chrono::steady_clock::now();
-        pthread_t thread1;
-        pthread_t thread2;
-        pthread_t thread3;
-        pthread_t thread4;
-        pthread_t thread5;
-        pthread_t thread6;
-        pthread_t thread7;
-        pthread_t thread8;
+        pthread_t thread1; //reposo
+        pthread_t thread2; //energia
+        pthread_t thread3; //hambre
+        pthread_t thread4; //edad
+        pthread_t thread5; //dormir
+        pthread_t thread6; //input
+        pthread_t thread7; //comer
+        pthread_t thread8; //jugar
     public:
         Pai():nombre("Pai"){data["edad"]=0;data["hambre"]=100;data["energia"]=100;};
         Pai(string _name, int _energia, int _hambre):nombre(_name){data["edad"]=0;data["hambre"]=_hambre;data["energia"]=_energia;};        
@@ -296,7 +296,7 @@ void Pai::run()
     replace_line("PaiN.txt", 2, " NOMBRE: "+getNombre());
     replace_line("PaiRespaldo.txt", 2, " NOMBRE: "+getNombre());
 
-    pthread_create( &thread1, NULL, ex_threadReposo, this);
+    pthread_create( &thread1, NULL, ex_threadReposo, this); 
     pthread_create( &thread2, NULL, ex_threadEnergia, this);
     pthread_create( &thread3, NULL, ex_threadHambre, this);
     pthread_create( &thread4, NULL, ex_threadEdad, this);
