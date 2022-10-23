@@ -13,14 +13,13 @@ using namespace std;
 
 //std:: mutex mu;
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-bool estaDurmiendo = false;
-bool estaJugando=false;
+bool estaOcupado = false;
 bool op1;
 bool op2;
 bool op3;
 int myMove; //piedra papel o tijer
 
-class Pai
+class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
 {
     private:
         std::string nombre; 
@@ -111,7 +110,7 @@ class Pai
 };
 void Pai::threadEnergia()//HILO
 {
-    while(getHambre()>0 && getEnergia()>0 && !estaDurmiendo)
+    while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
     {
         setEnergia(getEnergia()-1);
         pthread_mutex_lock( &mutex1 );
@@ -126,7 +125,7 @@ void Pai::threadEnergia()//HILO
 };
 void Pai::threadHambre()//HILO
 {
-    while(getHambre()>0 && getEnergia()>0 && !estaDurmiendo)
+    while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
     {
         setHambre(getHambre()-1);
         pthread_mutex_lock( &mutex1 );
@@ -194,7 +193,7 @@ void Pai::threadReposo()//HILO
 };
 void Pai::dormir()//HILO
 {
-    estaDurmiendo = true;
+    estaOcupado = true;
     while(getEnergia()<100)
     {
         system("cls");
@@ -210,7 +209,7 @@ void Pai::dormir()//HILO
         }
     }
     system("cls");
-    estaDurmiendo = false;
+    estaOcupado = false;
     run();
 }
 
@@ -218,7 +217,7 @@ void Pai::comer()//HILO
 {
     //jei
     //ssssssssssssss
-    estaDurmiendo = true;
+    estaOcupado = true;
     for(int i=1; i<14; i++)
     {
         printSprite("PaiEat"+to_string(i)+".txt",100);
@@ -236,7 +235,7 @@ void Pai::comer()//HILO
         setHambre(100);
 
     system("cls");
-    estaDurmiendo = false;
+    estaOcupado = false;
     run();
 }
 void Pai::input()//HILO
@@ -248,7 +247,7 @@ void Pai::input()//HILO
     {
         char n;
         std::cin>>n;
-        if(estaJugando) myMove = int(n-'0');
+        if(estaOcupado) myMove = int(n-'0');
         switch (n)
         {
         case '1':
@@ -276,7 +275,7 @@ void Pai::input()//HILO
 }
 void Pai::jugar()
 {
-    estaJugando = true;
+    estaOcupado = true;
     srand (time(NULL));
     int paiMove = rand()%3 + 1;
     //cout<<paiMove<<endl;
@@ -321,8 +320,7 @@ void Pai::jugar()
     printSprite(str2,4000);
     system("cls");
     del_line(nameFile2,2, "temp____.txt");
-    estaJugando = false;
-    estaDurmiendo = false;
+    estaOcupado = false;
     run();
 }
 
