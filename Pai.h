@@ -12,15 +12,15 @@
 
 using namespace std;
 
-//std:: mutex mu;
+//std:: mutex mu
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 bool estaOcupado = false;
 bool op1;
 bool op2;
 bool op3;
-int myMove; //piedra papel o tijer
+int myMove; //piedra papel o tijera
 
-class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
+class Pai //INCLUIIIIIIIIIIIIIR PTHREAD_EXIT(NUll)
 {
     private:
         string nombre; 
