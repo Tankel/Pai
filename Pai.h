@@ -25,6 +25,15 @@ class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
     private:
         string nombre; 
         static std::map<string,int> data;/*int edad, int hambre, int energia*/
+        std::chrono::steady_clock::time_point start = chrono::steady_clock::now();
+        pthread_t thread1;
+        pthread_t thread2;
+        pthread_t thread3;
+        pthread_t thread4;
+        pthread_t thread5;
+        pthread_t thread6;
+        pthread_t thread7;
+        pthread_t thread8;
     public:
         Pai():nombre("Pai"){data["edad"]=0;data["hambre"]=100;data["energia"]=100;};
         Pai(string _name, int _energia, int _hambre):nombre(_name){data["edad"]=0;data["hambre"]=_hambre;data["energia"]=_energia;};        
@@ -33,7 +42,7 @@ class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
         int getEdad()
         {
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); 
-            return chrono::duration_cast<chrono::seconds>(end - start).count()/180; //cumple 1 anio cada 3min
+            return chrono::duration_cast<chrono::seconds>(end - start).count()/90; //cumple 1 anio cada 3min
         };
         int getHambre(){return data["hambre"];};
         int getEnergia(){return data["energia"];};
@@ -50,15 +59,6 @@ class Pai //INCLUIR PTHREAD_EXIIIIIIIIIIIIIIT(NUll)
         void threadHambre();
         void threadEdad();
         void input();
-        std::chrono::steady_clock::time_point start = chrono::steady_clock::now();
-        pthread_t thread1;
-        pthread_t thread2;
-        pthread_t thread3;
-        pthread_t thread4;
-        pthread_t thread5;
-        pthread_t thread6;
-        pthread_t thread7;
-        pthread_t thread8;
         static void* ex_threadEnergia(void * This)
         {
             Pai* cptr = (Pai*)This;
@@ -105,14 +105,11 @@ void Pai::threadEnergia()//HILO
 {
     while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
     {
-        setEnergia(getEnergia()-1);
         pthread_mutex_lock( &mutex1 );
-        del_line("PaiN.txt",13, "temp1.txt");
-        del_line("PaiN1.txt",13, "temp1_.txt");
-        write_line("PaiN.txt",13," ENERGIA: "+to_string(getEnergia()), "temp1.txt"); //\r
-        write_line("PaiN1.txt",13," ENERGIA: "+to_string(getEnergia()), "temp1_.txt");
+        replace_line("PaiN.txt",13," ENERGIA: "+to_string(getEnergia())); //\r
         pthread_mutex_unlock( &mutex1 );
         Sleep(7102);
+        setEnergia(getEnergia()-1);
     }
     
 };
@@ -120,12 +117,8 @@ void Pai::threadHambre()//HILO
 {
     while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
     {
-        setHambre(getHambre()-1);
         pthread_mutex_lock( &mutex1 );
-        del_line("PaiN.txt",14, "temp2_.txt");
-        del_line("PaiN1.txt",14, "temp2.txt");
-        write_line("PaiN.txt",14," HAMBRE: "+to_string(getHambre()), "temp2.txt"); //\r
-        write_line("PaiN1.txt",14," HAMBRE: "+to_string(getHambre()), "temp2_.txt");
+        replace_line("PaiN.txt",14," HAMBRE: "+to_string(getHambre())); //\r
         if(getHambre()<1)
         {
             printSprite("GameOver.txt",200);
@@ -134,29 +127,36 @@ void Pai::threadHambre()//HILO
         }
         pthread_mutex_unlock( &mutex1 );
         Sleep(5001);
+        setHambre(getHambre()-1);
     }
 };
 void Pai::threadEdad()//HILO
 {
-    while(getHambre()>0 && getEnergia()>0)
+    int muerte = rand()%100 + 50;
+    while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
     {
         setEdad(getEdad());
         pthread_mutex_lock( &mutex1 );
-        del_line("PaiN.txt",3, "temp3.txt"); //BORRAR POR NUMERO DE RENGLON MEJOR Y QUITAR PUNTOS EN TXT 
-        del_line("PaiN1.txt",3, "temp3_.txt");
-        write_line("PaiN.txt",3," EDAD: "+to_string(getEdad()), "temp3.txt"); //\r
-        write_line("PaiN1.txt",3," EDAD: "+to_string(getEdad()), "temp3_.txt");
+        replace_line("PaiN.txt",3," EDAD: "+to_string(getEdad())); //\r
         pthread_mutex_unlock( &mutex1 );
         Sleep(4500);
+        if(getEdad()>muerte)
+        {
+            printSprite("GameOver.txt",200);
+            system("pause");
+            exit(3);
+        }
     }
 };
 void Pai::threadReposo()//HILO
 {
-    while(getHambre()>0 && getEnergia()>0)
+    while(getHambre()>0 && getEnergia()>0 &&!estaOcupado)
     {
         for(int i=0; i<8; i++)
         {
-            pthread_mutex_lock( &mutex1 );
+            pthread_mutex_lock( &mutex1 );            
+            replace_line("PaiN.txt",8,"[]               | |_|  v  |_| |               []");
+            replace_line("PaiN.txt",7,"[]               |  _       _  |               []");
             system("cls");
             printASCII("PaiN.txt");
             pthread_mutex_unlock( &mutex1 );
@@ -178,38 +178,45 @@ void Pai::threadReposo()//HILO
             }
         }
         pthread_mutex_lock( &mutex1 );
+        replace_line("PaiN.txt",8,"[]               | -.-  v  -.- |               []");
+        replace_line("PaiN.txt",7,"[]               |             |               []");
         system("cls");
-        printASCII("PaiN1.txt");
+        printASCII("PaiN.txt");
         pthread_mutex_unlock( &mutex1 );
         Sleep(220);
     }
 };
 void Pai::dormir()//HILO
 {
+    if(!estaOcupado)
+    {
     estaOcupado = true;
     while(getEnergia()<100)
     {
         system("cls");
         for(int i=1; i<4; i++)
         {
-        std::string str = "PaiSleep"+to_string(i)+".txt";
-        const char * nameFile = str.c_str();
-        write_line(nameFile,13," ENERGIA: "+to_string(getEnergia()), "temp1.txt"); //\r
-        printSprite(nameFile,260);
-        if(getEnergia()<100)
-            setEnergia(getEnergia()+1);
-        del_line(nameFile,13, "temp1.txt");
+            std::string str = "PaiSleep"+to_string(i)+".txt";
+            const char * nameFile = str.c_str();
+            replace_line(nameFile,13," ENERGIA: "+to_string(getEnergia())); //\r
+            printSprite(nameFile,260);
+            if(getEnergia()<100)
+                setEnergia(getEnergia()+1);
+            //del_line(nameFile,13);
         }
     }
     system("cls");
     estaOcupado = false;
     run();
+    }
 }
 
 void Pai::comer()//HILO
 {
     //jei
     //ssssssssssssss
+    if(!estaOcupado)
+    {
     estaOcupado = true;
     for(int i=1; i<14; i++)
     {
@@ -230,44 +237,27 @@ void Pai::comer()//HILO
     system("cls");
     estaOcupado = false;
     run();
+    }
 }
 void Pai::input()//HILO
 {
     op1 = false;
     op2 = false;
     op3 = false;
-    while(true)
-    {
+    while(true){
         char n;
         std::cin>>n;
         if(estaOcupado) myMove = int(n-'0');
-        switch (n)
-        {
-        case '1':
-        {
-            op1 = true;
-            break;
-        }
-        
-        case '2':
-        {
-            op2 = true;
-            break;
-        }
-        
-        case '3':
-        {
-            op3 = true;
-            break;
-        }
-        
-        default:
-            break;
-        }
-    }
+        switch (n){
+        case '1':{op1 = true;break;}
+        case '2':{op2 = true;break;}
+        case '3':{op3 = true;break;}
+        default:break;}}
 }
 void Pai::jugar()
 {
+    if(!estaOcupado)
+    {
     estaOcupado = true;
     srand (time(NULL));
     int paiMove = rand()%3 + 1;
@@ -277,52 +267,34 @@ void Pai::jugar()
     Sleep(100);
     while(myMove==-1)
     {
-        pthread_mutex_lock( &mutex1 );
         printSprite("PaiPPJ1.txt",400);
-        pthread_mutex_unlock( &mutex1 );
-        pthread_mutex_lock( &mutex1 );
         printSprite("PaiPPJ2.txt",400);
-        pthread_mutex_unlock( &mutex1 );
-        pthread_mutex_lock( &mutex1 );
         printSprite("PaiPPJ3.txt",400);
-        pthread_mutex_unlock( &mutex1 );
     }
     std::string str2 = "PaiPPJ"+to_string(paiMove)+".txt";
     const char * nameFile2 = str2.c_str();
     printSprite(str2,3000);
 
-    if(myMove==paiMove)
-        g=0;
-    else if((myMove==1&&paiMove==3)||(myMove==2&&paiMove==1)||(myMove==3&&paiMove==2))
-        g=1;
-    else if((myMove==3&&paiMove==1)||(myMove==1&&paiMove==2)||(myMove==2&&paiMove==3))
-        g=2;
+    if(myMove==paiMove)g=0;
+    else if((myMove==1&&paiMove==3)||(myMove==2&&paiMove==1)||(myMove==3&&paiMove==2))g=1;
+    else if((myMove==3&&paiMove==1)||(myMove==1&&paiMove==2)||(myMove==2&&paiMove==3))g=2;
 
-    if(g==0)
-    {
-        write_line(nameFile2, 2, "\t\t     EMPATE", "tempemp.txt"); 
-    }
-    else if(g==1)
-    {
-        write_line(nameFile2, 2, "\t\t    HAS GANADO", "tempwtie.txt"); 
-    }
-    else if(g==2)
-    {
-        write_line(nameFile2, 2, "\t\t   HAS PERDIDO", "tempperd.txt"); 
-    }
+    if(g==0)replace_line(nameFile2, 2, "\t\t      EMPATE"); 
+    else if(g==1)replace_line(nameFile2, 2, "\t\t    HAS GANADO"); 
+    else if(g==2)replace_line(nameFile2, 2, "\t\t   HAS PERDIDO"); 
     printSprite(str2,4000);
     system("cls");
-    del_line(nameFile2,2, "temp____.txt");
+    del_line(nameFile2,2);
+
     estaOcupado = false;
     run();
+    }
 }
 
 void Pai::run()
 {  
-    del_line("PaiN.txt",2, "temp4.txt");
-    del_line("PaiN1.txt",2, "temp4.txt");
-    write_line("PaiN.txt", 2, " NOMBRE: "+getNombre(), "temp4.txt");
-    write_line("PaiN1.txt", 2, " NOMBRE: "+getNombre(), "temp4.txt");
+    replace_line("PaiN.txt", 2, " NOMBRE: "+getNombre());
+    replace_line("PaiRespaldo.txt", 2, " NOMBRE: "+getNombre());
 
     pthread_create( &thread1, NULL, ex_threadReposo, this);
     pthread_create( &thread2, NULL, ex_threadEnergia, this);

@@ -1,47 +1,43 @@
 #include <iostream>
 #include <fstream>
 #include <windows.h>
+#include <time.h> 
 
 using namespace std;
 
-void write(std::string nombre, std::string texto)
+void fileCopy(std::string copy)
 {
-    std::ofstream archivo;
-
-    archivo.open(nombre, ios::app);
-    if(archivo.fail())
+    string line;
+    ifstream ini_file{"PaiNRespaldo.txt"};
+    ofstream out_file{copy};
+    if (ini_file && out_file)
     {
-        cout<<"The file couldn't be open"<<std::endl;
+        while (getline(ini_file, line)) {
+            out_file << line << "\n";
+        }
     }
-    fflush(stdin);
-    archivo<<texto;
+    ini_file.close();
+    out_file.close();
+};
 
-    archivo.close();
-}
-void del_line(const char *file_name, int n, const char *file_nametemp)   
+void del_line(const char *file_name, int n)   
 {    
+    srand (time(NULL));
+    int tempn = rand();   
     std::ifstream fin(file_name);    
-    std::ofstream wout;                
-    wout.open(file_nametemp, ios::out);
+    std::ofstream wout;     
+    std::string tempfile = "temp"+to_string(tempn)+".txt"; 
+    const char * tempp = tempfile.c_str();   
+    wout.open(tempfile, ios::out);
+    if(wout.fail())
+    {
+        fileCopy(file_name);
+    }
     char ch; 
     int line = 0;    
     std::string sline = "";
     if(fin.is_open())
     {
-        /*
-        while(fin.get(ch)) 
-        {      
-            if(ch == '\n') 
-                line++; 
-            
-            getline(fin,sline);
-            if(line != n) wout<<sline;
-            else 
-            {
-                wout<<s<<std::endl;
-                line++;
-            }
-        }*/
         while(!fin.eof())
         {
            while(getline(fin,sline))
@@ -57,40 +53,57 @@ void del_line(const char *file_name, int n, const char *file_nametemp)
     wout.close();  
     fin.close();   
     remove(file_name);        
-    rename(file_nametemp, file_name);  
-} 
-void write_line(const char *file_name, int n, std::string s, const char *file_nametemp)   
-{    
-  std::ifstream fin(file_name);    
-  std::ofstream fout;                
-  fout.open(file_nametemp, ios::out); 
-  
-  char ch; 
-  int line = 0;            
-  while(fin.get(ch)) 
-  {      
-    if(ch == '\n') 
-      line++; 
-     
-    if(line != n) fout<<ch;
-    else 
-    {
-        fout<<s<<std::endl;
-        line++;
-    }
-  } 
-  fout.close();  
-  fin.close();   
-  remove(file_name);        
-  rename(file_nametemp, file_name);  
+    rename(tempp, file_name);  
 } 
 
-void printASCII(std::string nombre)
+void write_line(const char *file_name, int n, std::string s)   
+{    
+    srand (time(NULL));
+    int tempn = rand();   
+    std::ifstream fin(file_name);    
+    std::ofstream wout;
+    std::string tempfile = "temp"+to_string(tempn)+".txt"; 
+    const char * tempp = tempfile.c_str();                   
+    wout.open(tempfile, ios::out); 
+    if(wout.fail())
+    {
+        fileCopy(file_name);
+    }
+    char ch; 
+    int line = 0;            
+    while(fin.get(ch)) 
+    {      
+        if(ch == '\n') 
+        line++; 
+        
+        if(line != n) wout<<ch;
+        else 
+        {
+            wout<<s<<std::endl;
+            line++;
+        }
+    } 
+    wout.close();  
+    fin.close();   
+    remove(file_name);        
+    rename(tempp, file_name);  
+} 
+
+void replace_line(const char *file_name, int n, std::string s)   
+{    
+    del_line(file_name, n);
+    write_line(file_name, n, s);
+}
+
+void printASCII(std::string file_name)
 {
     std::string line = "";
     std::ifstream archivo; 
-    archivo.open(nombre);
-    if(archivo.fail()) cout<<"El archivo no se puede abrir"<<std::endl;
+    archivo.open(file_name);
+    if(archivo.fail())
+    {
+        fileCopy(file_name);
+    }
     if(archivo.is_open())
     {
         while(!archivo.eof())
@@ -101,13 +114,13 @@ void printASCII(std::string nombre)
     }
     else
     {
-        cout<<"El archivo no se puede abrir"<<std::endl;
+        fileCopy(file_name);
     }
     archivo.close();
 };
-void printSprite(std::string archivo, double tiempo)
+void printSprite(std::string file_name, double tiempo)
 {
     system("cls");
-    printASCII(archivo);
+    printASCII(file_name);
     Sleep(tiempo);
 };
