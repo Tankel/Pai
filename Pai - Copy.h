@@ -105,7 +105,7 @@ void Pai::threadEnergia()//HILO
         write_line("PaiN.txt",13," ENERGIA: "+to_string(getEnergia()), "temp1.txt"); //\r
         write_line("PaiN1.txt",13," ENERGIA: "+to_string(getEnergia()), "temp1_.txt");
         pthread_mutex_unlock( &mutex1 );
-        Sleep(7102);
+        Sleep(10102);
     }
     
 };

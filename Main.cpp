@@ -7,13 +7,14 @@ int main()
     std::string name;
     int n;
     char r;
+    system("cls");
     Pai p;
     do
     {
       cout<<"Quieres nombrar a tu nuevo amigo? s/n\n";
       std::cin>>r;
       p = Pai();
-      //p = Pai("Pai", 100, 3);
+      //p = Pai("Pai", 100, 1);
       if(r=='S' || r=='s')
       {
         cout<<"Ingrese el mote\n";
