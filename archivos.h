@@ -2,8 +2,11 @@
 #include <fstream>
 #include <windows.h>
 #include <time.h> 
+#include <pthread.h>
 
 using namespace std;
+
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
 void fileCopy(std::string copy)
 {
@@ -27,7 +30,7 @@ void del_line(const char *file_name, int n)
     std::ifstream fin(file_name);    
     std::ofstream wout;     
     std::string tempfile = "temp"+to_string(tempn)+".txt"; 
-    const char * tempp = tempfile.c_str();   
+    const char * tempp = tempfile.c_str(); 
     wout.open(tempfile, ios::out);
     if(wout.fail())
     {
@@ -53,7 +56,7 @@ void del_line(const char *file_name, int n)
     wout.close();  
     fin.close();   
     remove(file_name);        
-    rename(tempp, file_name);  
+    rename(tempp, file_name);
 } 
 
 void write_line(const char *file_name, int n, std::string s)   
@@ -63,7 +66,7 @@ void write_line(const char *file_name, int n, std::string s)
     std::ifstream fin(file_name);    
     std::ofstream wout;
     std::string tempfile = "temp"+to_string(tempn)+".txt"; 
-    const char * tempp = tempfile.c_str();                   
+    const char * tempp = tempfile.c_str();               
     wout.open(tempfile, ios::out); 
     if(wout.fail())
     {
@@ -84,9 +87,9 @@ void write_line(const char *file_name, int n, std::string s)
         }
     } 
     wout.close();  
-    fin.close();   
+    fin.close();     
     remove(file_name);        
-    rename(tempp, file_name);  
+    rename(tempp, file_name); 
 } 
 
 void replace_line(const char *file_name, int n, std::string s)   

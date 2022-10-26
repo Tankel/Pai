@@ -61,7 +61,10 @@
         "xstddef": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "map": "cpp",
+        "xtree": "cpp",
+        "*.rh": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
