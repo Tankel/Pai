@@ -14,9 +14,9 @@ int main()
       cout<<"Quieres nombrar a tu nuevo amigo? s/n\n";
       std::cin>>r;
       p = Pai();
-      p = Pai("Pai", 100, 2, 0);
-      p = Pai("Pai", 2, 100, 0);
-      p = Pai("Pai", 100, 100, 60);
+      //p = Pai("Pai", 100, 2, 0);
+      //p = Pai("Pai", 2, 100, 0);
+      //p = Pai("Pai", 100, 100, 60);
       if(r=='S' || r=='s')
       {
         cout<<"Ingrese el mote\n";
@@ -26,7 +26,4 @@ int main()
     } while (r!='s' && r!='S' && r!='n' && r!='N');
 
     p.run();
-    
-    //cout<<p.getEnergia()<<endl;
-
 }
