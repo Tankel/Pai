@@ -40,9 +40,9 @@ class Pai
             data["hambre"]=100;
             data["energia"]=100;
         };
-        Pai(string _name, int _energia, int _hambre):nombre(_name)
+        Pai(string _name, int _energia, int _hambre, int _edad):nombre(_name)
         {
-            data["edad"]=0;
+            data["edad"]=_edad;
             data["hambre"]=_hambre;
             data["energia"]=_energia;
         };        
@@ -116,7 +116,7 @@ class Pai
 std::map<string,int> Pai::data;
 void Pai::threadEnergia()//HILO
 {
-    while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
+    while(getHambre()>0 && getEnergia()>0)
     {
         pthread_mutex_lock( &mutex1 );
         replace_line("PaiN.txt",13," ENERGY: "+to_string(getEnergia())); //\r
@@ -128,7 +128,7 @@ void Pai::threadEnergia()//HILO
 };
 void Pai::threadHambre()//HILO
 {
-    while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
+    while(getHambre()>0 && getEnergia()>0)
     {
         pthread_mutex_lock( &mutex1 );
         replace_line("PaiN.txt",14," HUNGRY: "+to_string(getHambre())); //\r
@@ -148,8 +148,8 @@ void Pai::threadHambre()//HILO
 };
 void Pai::threadEdad()//HILO
 {
-    int muerte = rand()%80 + 20;
-    while(getHambre()>0 && getEnergia()>0 && !estaOcupado)
+    int muerte = rand()%20 + 60;
+    while(getHambre()>0 && getEnergia()>0)
     {
         setEdad(getEdad());
         pthread_mutex_lock( &mutex1 );
@@ -244,19 +244,17 @@ void Pai::dormir()//HILO
                 setEnergia(getEnergia()+3);
             if(getEnergia()>100)
                 setEnergia(100);
-            //del_line(nameFile,13);
         }
     }
     system("cls");
+    op2=false;
     estaOcupado = false;
-    run();
-    }
     pthread_exit(NULL);
+    }
+
 }
 void Pai::comer()//HILO
 {
-    //jei
-    //ssssssssssssss
     if(!estaOcupado)
     {
     estaOcupado = true;
@@ -277,20 +275,19 @@ void Pai::comer()//HILO
         setHambre(100);
 
     system("cls");
+    op1=false;
     estaOcupado = false;
-    run();
-    }
     pthread_exit(NULL);
+    //run();
+    }
 }
 void Pai::jugar()
 {
-    estaJugando = true;
     if(!estaOcupado)
     {
     estaOcupado = true;
     srand (time(NULL));
     int paiMove = rand()%3 + 1;
-    //cout<<paiMove<<endl;
     myMove =-1;
     int g;
     Sleep(100);
@@ -314,12 +311,10 @@ void Pai::jugar()
     printSprite(str2,1500);
     system("cls");
     del_line(nameFile2,2);
-
+    op3=false;
     estaOcupado = false;
-    estaJugando = false;
-    run();
-    }
     pthread_exit(NULL);
+    }
 }
 void Pai::input()//HILO
 {
@@ -331,11 +326,14 @@ void Pai::input()//HILO
         char n;
         std::cin>>n;
         if(estaOcupado) myMove = int(n-'0');
+        else
+        {
         switch (n){
         case '1':{op1 = true;break;}
         case '2':{op2 = true;break;}
         case '3':{op3 = true;break;}
         default:break;}
+        }
     }
     pthread_exit(NULL);
 }

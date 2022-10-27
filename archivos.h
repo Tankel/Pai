@@ -8,21 +8,6 @@ using namespace std;
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
-void fileCopy(std::string copy)
-{
-    string line;
-    ifstream ini_file{"PaiNRespaldo.txt"};
-    ofstream out_file{copy};
-    if (ini_file && out_file)
-    {
-        while (getline(ini_file, line)) {
-            out_file << line << "\n";
-        }
-    }
-    ini_file.close();
-    out_file.close();
-};
-
 void del_line(const char *file_name, int n)   
 {    
     srand (time(NULL));
@@ -34,7 +19,10 @@ void del_line(const char *file_name, int n)
     wout.open(tempfile);
     if(wout.fail())
     {
-        fileCopy(file_name);
+        pthread_mutex_lock( &mutex1 );
+        printSprite("Error.txt",10000);
+        exit(EXIT_FAILURE);
+        pthread_mutex_unlock( &mutex1 );
     }
     char ch; 
     int line = 0;    
@@ -70,7 +58,10 @@ void write_line(const char *file_name, int n, std::string s)
     wout.open(tempfile); 
     if(wout.fail())
     {
-        fileCopy(file_name);
+        pthread_mutex_lock( &mutex1 );
+        printSprite("Error.txt",10000);
+        exit(EXIT_FAILURE);
+        pthread_mutex_unlock( &mutex1 );
     }
     char ch; 
     int line = 0;            
@@ -105,7 +96,10 @@ void printASCII(std::string file_name)
     archivo.open(file_name);
     if(archivo.fail())
     {
-        fileCopy(file_name);
+        pthread_mutex_lock( &mutex1 );
+        printSprite("Error.txt",10000);
+        exit(EXIT_FAILURE);
+        pthread_mutex_unlock( &mutex1 );
     }
     if(archivo.is_open())
     {
@@ -117,7 +111,10 @@ void printASCII(std::string file_name)
     }
     else
     {
-        fileCopy(file_name);
+        pthread_mutex_lock( &mutex1 );
+        printSprite("Error.txt",10000);
+        exit(EXIT_FAILURE);
+        pthread_mutex_unlock( &mutex1 );
     }
     archivo.close();
 };
