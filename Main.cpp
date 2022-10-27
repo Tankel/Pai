@@ -11,19 +11,19 @@ int main()
     Pai p;
     do
     {
-      cout<<"Quieres nombrar a tu nuevo amigo? s/n\n";
+      cout<<"Do you want to name your new friend? y/n\n";
       std::cin>>r;
       p = Pai();
       //p = Pai("Pai", 100, 2, 0);
       //p = Pai("Pai", 2, 100, 0);
       //p = Pai("Pai", 100, 100, 60);
-      if(r=='S' || r=='s')
+      if(r=='Y' || r=='y')
       {
-        cout<<"Ingrese el mote\n";
+        cout<<"Enter the nickname\n";
         std::cin>>name;
         p = Pai(name);
       }
-    } while (r!='s' && r!='S' && r!='n' && r!='N');
+    } while (r!='y' && r!='Y' && r!='n' && r!='N');
 
     p.run();
 }

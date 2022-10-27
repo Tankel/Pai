@@ -7,7 +7,41 @@
 using namespace std;
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-
+void printASCII(std::string file_name)
+{
+    std::string line = "";
+    std::ifstream archivo; 
+    archivo.open(file_name);
+    if(archivo.fail())
+    {
+        pthread_mutex_lock( &mutex1 );
+        printASCII("Error.txt");
+        exit(EXIT_FAILURE);
+        pthread_mutex_unlock( &mutex1 );
+    }
+    if(archivo.is_open())
+    {
+        while(!archivo.eof())
+        {
+            getline(archivo,line);
+            std::cout<<line<<std::endl;
+        }
+    }
+    else
+    {
+        pthread_mutex_lock( &mutex1 );
+        printASCII("Error.txt");
+        exit(EXIT_FAILURE);
+        pthread_mutex_unlock( &mutex1 );
+    }
+    archivo.close();
+};
+void printSprite(std::string file_name, double tiempo)
+{
+    system("cls");
+    printASCII(file_name);
+    Sleep(tiempo);
+};
 void del_line(const char *file_name, int n)   
 {    
     srand (time(NULL));
@@ -88,39 +122,3 @@ void replace_line(const char *file_name, int n, std::string s)
     del_line(file_name, n);
     write_line(file_name, n, s);
 }
-
-void printASCII(std::string file_name)
-{
-    std::string line = "";
-    std::ifstream archivo; 
-    archivo.open(file_name);
-    if(archivo.fail())
-    {
-        pthread_mutex_lock( &mutex1 );
-        printSprite("Error.txt",10000);
-        exit(EXIT_FAILURE);
-        pthread_mutex_unlock( &mutex1 );
-    }
-    if(archivo.is_open())
-    {
-        while(!archivo.eof())
-        {
-            getline(archivo,line);
-            std::cout<<line<<std::endl;
-        }
-    }
-    else
-    {
-        pthread_mutex_lock( &mutex1 );
-        printSprite("Error.txt",10000);
-        exit(EXIT_FAILURE);
-        pthread_mutex_unlock( &mutex1 );
-    }
-    archivo.close();
-};
-void printSprite(std::string file_name, double tiempo)
-{
-    system("cls");
-    printASCII(file_name);
-    Sleep(tiempo);
-};
