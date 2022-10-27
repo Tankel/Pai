@@ -56,7 +56,7 @@ class Pai
         int getEdad()
         {
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); 
-            return chrono::duration_cast<chrono::seconds>(end - start).count()/60; //cumple 1 anio cada 1min
+            return chrono::duration_cast<chrono::seconds>(end - start).count()/10; //cumple 1 anio cada 1min
         };
         int getHambre(){return data["hambre"];};
         int getEnergia(){return data["energia"];};
@@ -155,7 +155,8 @@ void Pai::threadEdad()//HILO
         pthread_mutex_lock( &mutex1 );
         replace_line("PaiN.txt",3," AGE: "+to_string(getEdad())); //\r
         pthread_mutex_unlock( &mutex1 );
-        Sleep(4500);
+        //Sleep(4500);
+        Sleep(1001);
         if(getEdad()>muerte)
         {
             pthread_mutex_lock( &mutex1 );

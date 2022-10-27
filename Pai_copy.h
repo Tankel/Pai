@@ -217,9 +217,11 @@ void Pai::dormir()//HILO
     }
     system("cls");
     estaOcupado = false;
+    //op2 = false;
+    //pthread_exit(NULL);
     run();
     }
-    pthread_exit(NULL);
+    //pthread_exit(NULL);
 }
 void Pai::comer()//HILO
 {
@@ -246,9 +248,11 @@ void Pai::comer()//HILO
 
     system("cls");
     estaOcupado = false;
+    //op1=false;
+    //pthread_exit(NULL);
     run();
     }
-    pthread_exit(NULL);
+    //pthread_exit(NULL);
 }
 void Pai::input()//HILO
 {
@@ -259,9 +263,9 @@ void Pai::input()//HILO
     while(true)
     {
         char n,m, c;
-        if(estaJugando)
+        if(estaOcupado)
         {
-            index2=0;
+            //index2=0;
             //myMove = int(n-'0');
             m='a';
             while(m!=ENTER)
@@ -272,7 +276,7 @@ void Pai::input()//HILO
                 //cout<<n<<endl;
                 case UP:{index2--;break;}
                 case DOWN:{index2++;break;}
-                case ENTER:{myMove=index2;break;}
+                case ENTER:{myMove=index2+1;break;}
                 default:break;
             }
             if(index2<0)index2=2;
@@ -331,15 +335,13 @@ void Pai::input()//HILO
             }
             }
             } 
+            myMove=index2+1;
         }
-        if(!estaJugando)
-        {
         n='1';
-        while(n!=ENTER)
+        do
         {
         switch (n=getch())
         {
-            if(estaJugando)break;
             //cout<<n<<endl;
             case UP:{index--;break;}
             case DOWN:{index++;break;}
@@ -414,8 +416,7 @@ void Pai::input()//HILO
         case '3':{op3 = true;break;}
         default:break;}*/
         //}
-        }
-        }
+        }while(n!=ENTER);
     }
     pthread_exit(NULL);
 }
@@ -437,11 +438,10 @@ void Pai::jugar()
         printSprite("PaiPPJ1.txt",1001);
         printSprite("PaiPPJ2.txt",1001);
         printSprite("PaiPPJ3.txt",1001);
-    }
-    cout<<"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n\n'ndsadadsad";
+    };
     std::string str2 = "PaiPPJ"+to_string(paiMove)+".txt";
     const char * nameFile2 = str2.c_str();
-    printSprite(str2,100);
+    printSprite(str2,1000);
 
     if(myMove==paiMove)g=0;
     else if((myMove==1&&paiMove==3)||(myMove==2&&paiMove==1)||(myMove==3&&paiMove==2))g=1;
@@ -456,9 +456,10 @@ void Pai::jugar()
 
     estaOcupado = false;
     estaJugando = false;
-    run();
-    }
+    op3 = false;
     pthread_exit(NULL);
+    //run();
+    }
 }
 void Pai::run()
 {  

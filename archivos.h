@@ -31,7 +31,7 @@ void del_line(const char *file_name, int n)
     std::ofstream wout;     
     std::string tempfile = "temp"+to_string(tempn)+".txt"; 
     const char * tempp = tempfile.c_str(); 
-    wout.open(tempfile, ios::out);
+    wout.open(tempfile);
     if(wout.fail())
     {
         fileCopy(file_name);
@@ -67,7 +67,7 @@ void write_line(const char *file_name, int n, std::string s)
     std::ofstream wout;
     std::string tempfile = "temp"+to_string(tempn)+".txt"; 
     const char * tempp = tempfile.c_str();               
-    wout.open(tempfile, ios::out); 
+    wout.open(tempfile); 
     if(wout.fail())
     {
         fileCopy(file_name);
