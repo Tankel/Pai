@@ -249,9 +249,9 @@ void Pai::dormir()//HILO
     system("cls");
     op2=false;
     estaOcupado = false;
+    run();
     pthread_exit(NULL);
     }
-
 }
 void Pai::comer()//HILO
 {
