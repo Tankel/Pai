@@ -1,4 +1,4 @@
-#Pai - A Virtual Pet (Programming Project)
+# Pai - A Virtual Pet (Programming Project)
 ## Description
 This is a virtual pet called "Pai" (although you can put him the name you want). 
 You're going to have to take care of him, you can feed him to increase his hunger bar
