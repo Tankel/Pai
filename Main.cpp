@@ -13,10 +13,9 @@ int main()
     {
       cout<<"Do you want to name your new friend? y/n\n";
       std::cin>>r;
-      //p = Pai();
+      p = Pai();
       //p = Pai("Pai", 100, 2, 0);
-      p = Pai("Pai", 1, 100, 0);
-      //p = Pai("Pai", 100, 100, 60);
+      //p = Pai("Pai", 1, 100, 0);
       if(r=='Y' || r=='y')
       {
         cout<<"Enter the nickname\n";
