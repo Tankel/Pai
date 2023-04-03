@@ -12,4 +12,4 @@ You also need to download all the .txt files for the program to work,
 since ther work as sprtes, and if the program doesn't find them, an error will be thrown.
 
 ## Video explanation
-[![Pai - Proyecto Programación Avanzada](https://img.youtube.com/vi/m_Oov_1WYjU/0.jpg)](https://www.youtube.com/watch?v=m_Oov_1WYjU "Pai - Proyecto Programación Avanzada (CLICK TO WATCH!)")
+[![Pai - Proyecto Programación Avanzada](https://img.youtube.com/vi/m_Oov_1WYjU/0.jpg)](https://www.youtube.com/watch?v=m_Oov_1WYj "Pai - Proyecto Programación Avanzada (CLICK TO WATCH!)")
