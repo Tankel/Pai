@@ -14,4 +14,4 @@ since ther work as sprtes, and if the program doesn't find them, an error will b
 ## Video explanation
 <p align="center">
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/m_Oov_1WYjU/0.jpg)](https://www.youtube.com/watch?v=m_Oov_1WYjU)
-  </p>
+</p>
